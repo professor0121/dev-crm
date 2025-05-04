@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllEmployees, getEmployeeById, addEmployee, updateEmployee, deleteEmployee } = require('../controllers/employee.controller');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/auth.middleware');
 
 router.route('/')
     .get(protect, admin, getAllEmployees)

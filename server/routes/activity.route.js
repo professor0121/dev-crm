@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllActivities, getActivityById, addActivity, updateActivity, deleteActivity } = require('../controllers/activity.controller');
-const { protect, employeeOrAdmin } = require('../middleware/authMiddleware');
+const { protect, employeeOrAdmin } = require('../middleware/auth.middleware');
 
 router.route('/')
     .get(protect, employeeOrAdmin, getAllActivities)
