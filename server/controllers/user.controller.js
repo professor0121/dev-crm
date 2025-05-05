@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -59,3 +61,48 @@ exports.authUser = async (req, res) => {
         res.status(401).json({ message: 'Invalid email or password' });
     }
 };
+
+exports.getUser=async (req,res)=>{
+    let token;
+    if(req.headers.authorization&&req.headers.authorization.startsWith('Bearer')){
+        token=req.headers.authorization.split(' ')[1];
+        const decoded=jwt.verify(token,process.env.JWT_SECRET);
+        const user=await User.findById(decoded.id);
+        console.log(user)
+
+        if(!user){
+            return res.status(401).json({message:"not authorized"})
+        }
+      
+        res.status(200).json({message:"success",token:token,user:user})
+    }
+}
+
+// exports.getUser = async (req, res) => {
+//     let token;
+
+//     if (
+//         req.headers.authorization &&
+//         req.headers.authorization.startsWith('Bearer')
+//     ) {
+//         try {
+//             token = req.headers.authorization.split(' ')[1];
+
+//             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//             const user = await User.findById(decoded.id); // 🔥 Corrected here
+
+//             if (!user) {
+//                 return res.status(401).json({ message: "Not authorized" });
+//             }
+
+//             console.log(user);
+//             console.log(token);
+
+//             return res.status(200).json({ message: "Success", user });
+//         } catch (error) {
+//             return res.status(401).json({ message: "Token failed", error: error.message });
+//         }
+//     }
+
+//     res.status(400).json({ message: "No token provided" });
+// }
